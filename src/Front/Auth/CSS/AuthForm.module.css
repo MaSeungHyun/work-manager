@@ -1,0 +1,12 @@
+.authForm {
+  height: 100vh;
+  background-image: linear-gradient(
+    to bottom right,
+    rgb(64, 0, 143),
+    rgb(173, 0, 207)
+  );
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+}
