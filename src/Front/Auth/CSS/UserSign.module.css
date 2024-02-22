@@ -18,8 +18,8 @@
 }
 
 .formBox {
-  position: relative;
-  top: -180px;
+  position: absolute;
+  top: 15%;
 
   height: auto;
   /* background-color: rgba(41, 41, 41, 0.763); */
@@ -27,7 +27,7 @@
   background-color: rgba(0, 0, 0, 0.6);
   padding: 30px 50px 50px 50px;
   border-radius: 15px;
-  box-shadow: 0px 3px 10px 1px black;
+  box-shadow: 0px 5px 10px 1px black;
 }
 
 .logInfo {

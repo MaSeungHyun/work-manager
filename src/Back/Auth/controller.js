@@ -7,16 +7,24 @@ const bcrypt = require('bcrypt');
 //
 
 exports.getUser = async (ctx) => {
-  const { id } = ctx.params;
-
-  const user = await getUser('Auth', 'users', id);
+  const { id, password } = ctx.request.body;
 
   try {
-    ctx.body = `Hello, ${user.id}`;
+    const user = await getUser('Auth', 'users', id);
+
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (isMatch) {
+      console.log('Success Login');
+      ctx.body = true;
+    } else {
+      console.log('Failed Login');
+      ctx.body = false;
+    }
   } catch (e) {
-    ctx.status = 400;
-    // ctx.body = "User not Found";
-    return ctx.throw(500, e);
+    console.log(e);
+    ctx.status = 500;
+    ctx.body = 'Internal Server Error';
   }
 };
 
@@ -44,13 +52,9 @@ exports.createUser = async (ctx) => {
   const salt = bcrypt.genSaltSync(10);
   const hash = bcrypt.hashSync(password, salt);
 
-  console.log(id);
-  console.log(password);
-  console.log(regDate);
-  console.log(hash);
   const user = {
     id,
-    hash,
+    password: hash,
     regDate,
   };
 
@@ -60,6 +64,7 @@ exports.createUser = async (ctx) => {
 
     if (result) {
       console.log('Success Insert User');
+      return (ctx.status = 200);
     } else {
       console.log('already exists User');
     }

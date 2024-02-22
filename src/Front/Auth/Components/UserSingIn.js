@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from '../CSS/UserSign.module.css';
+import axios from 'axios';
+import { useRecoilCallback, useRecoilState } from 'recoil';
+import { IsLoggedIn } from '../../../recoil/auth';
 export const UserSignIn = () => {
   const navigate = useNavigate();
 
+  const [isLoggedIn, setIsLoggedIn] = useRecoilState(IsLoggedIn);
   const [input, setInput] = useState({
     userId: '',
     userPw: '',
@@ -18,6 +22,31 @@ export const UserSignIn = () => {
 
   const onMoveRegist = () => {
     navigate('/register');
+  };
+
+  const executeLogin = async () => {
+    const payload = {
+      id: input.userId,
+      password: input.userPw,
+    };
+    const response = await axios.post('/auth/getUser', payload, {
+      headers: {
+        'Content-Type': `application/json`,
+        // Accept: "application/json",
+        // Authorization: "Bearer " + token,
+        'Access-Control-Allow-Origin': `*`,
+        'Access-Control-Allow-Credentials': 'true',
+      },
+    });
+
+    console.log(response);
+    if (response?.data) {
+      console.log('Success');
+      setIsLoggedIn(true);
+      navigate('/');
+    } else {
+      console.log('Failed');
+    }
   };
 
   return (
@@ -46,7 +75,9 @@ export const UserSignIn = () => {
         </div>
 
         <div>
-          <button className={styles.logButton}>Login</button>
+          <button className={styles.logButton} onClick={executeLogin}>
+            Login
+          </button>
         </div>
 
         <div className={styles.logOpt}>

@@ -6,18 +6,11 @@ import { UserSignIn } from '../Auth/Components/UserSingIn';
 import AuthForm from '../Auth/AuthForm';
 import { UserSignUp } from '../Auth/Components/UserSignUp';
 
-export default function Main() {
+export default function MainView() {
   const isLoggedIn = useRecoilValue(IsLoggedIn);
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route
-          path="/"
-          element={!isLoggedIn ? <Navigate to="/login" /> : <Main />}
-        />
-        <Route path="/login" element={<AuthForm />} />
-        <Route path="/register" element={<UserSignUp />} />
-      </Routes>
-    </BrowserRouter>
+    <div>
+      <div>Main</div>
+    </div>
   );
 }

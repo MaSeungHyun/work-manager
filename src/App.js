@@ -1,12 +1,12 @@
 import './App.css';
-import Main from './Front/Main/Main';
 import { RecoilRoot } from 'recoil';
+import RouterComponent from './Front/RoutesCompoent';
 
 function App() {
   return (
     <div className="work-manager-frame">
       <RecoilRoot>
-        <Main />
+        <RouterComponent />
       </RecoilRoot>
     </div>
   );

@@ -28,7 +28,7 @@ export const UserSignUp = () => {
       regDate: date.toLocaleString(),
     };
 
-    const response = await axios
+    await axios
       .post('/auth/createUser', payload, {
         headers: {
           'Content-Type': `application/json`,
@@ -40,9 +40,9 @@ export const UserSignUp = () => {
       })
       .then((res) => {
         console.log(res);
+        movToPrevPage();
       })
       .catch((e) => {
-        // console.log(payload);
         console.log(e);
       });
   };
