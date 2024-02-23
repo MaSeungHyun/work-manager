@@ -16,10 +16,12 @@ exports.getUser = async (ctx) => {
 
     if (isMatch) {
       console.log('Success Login');
-      ctx.body = true;
+      // ctx.status = 200;
+      ctx.body = { success: true, message: 'Login successful' };
     } else {
       console.log('Failed Login');
-      ctx.body = false;
+      // ctx.status = 401; // Unauthorized
+      ctx.body = { success: false, message: 'Invalid credentials' };
     }
   } catch (e) {
     console.log(e);
@@ -63,9 +65,10 @@ exports.createUser = async (ctx) => {
     const result = await registUser(dbName, collection, user);
 
     if (result) {
+      ctx.body = { regist: true };
       console.log('Success Insert User');
-      return (ctx.status = 200);
     } else {
+      ctx.body = { regist: false };
       console.log('already exists User');
     }
   } else {

@@ -1,29 +1,33 @@
-const bcrypt = require('bcrypt');
-
-const password = '1111';
-
-const encryption = (target) => {
-  const salt = bcrypt.genSaltSync(10);
-
-  const hash = bcrypt.hashSync(target, salt);
-
-  console.log(salt);
-  console.log(hash);
+const header = {
+  typ: 'JWT',
+  alg: 'HS256',
 };
 
-encryption(password);
+const encodedHeader = new Buffer(JSON.stringify(header))
+  .toString('base64')
+  .replace('=', '');
 
-const correctPw = '1111';
-const inCorrectPw = '1112';
-const hash = '$2b$10$OTjAIB8Oq.p7TNM8ViNaK.fvN7eYh8YaV4gqeD3WlMZgmjgohfPDa';
+// console.log(encodedHeader);
 
-const comparePw = (target, hash) => {
-  bcrypt.compare(target, hash).then((res) => {
-    if (res) console.log('Success LogIn');
-    else console.log(target, 'is not correct');
-    return res;
-  });
+const payload = {
+  iss: 'ma.caron_g',
+  exp: '1488970000000',
+  'http://localhost:3000/jwt_claims/admin': true,
+  userId: '123456789',
+  username: 'macarong',
 };
 
-comparePw(correctPw, hash);
-comparePw(inCorrectPw, hash);
+const encodedPayload = new Buffer(JSON.stringify(payload))
+  .toString('base64')
+  .replace('=', '');
+
+// console.log(encodedPayload);
+
+const crypto = require('crypto');
+const signature = crypto
+  .createHmac('sha256', 'secret')
+  .update(encodedHeader + '.' + encodedPayload)
+  .digest('base64')
+  .replace('=', '');
+
+console.log(signature);

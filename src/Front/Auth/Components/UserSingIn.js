@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from '../CSS/UserSign.module.css';
 import axios from 'axios';
-import { useRecoilCallback, useRecoilState } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { IsLoggedIn } from '../../../recoil/auth';
 export const UserSignIn = () => {
   const navigate = useNavigate();
@@ -32,20 +32,17 @@ export const UserSignIn = () => {
     const response = await axios.post('/auth/getUser', payload, {
       headers: {
         'Content-Type': `application/json`,
-        // Accept: "application/json",
-        // Authorization: "Bearer " + token,
         'Access-Control-Allow-Origin': `*`,
         'Access-Control-Allow-Credentials': 'true',
       },
     });
 
-    console.log(response);
-    if (response?.data) {
-      console.log('Success');
+    if (response?.data.success) {
+      console.log(response.data.message);
       setIsLoggedIn(true);
       navigate('/');
     } else {
-      console.log('Failed');
+      console.log(response.data.message);
     }
   };
 

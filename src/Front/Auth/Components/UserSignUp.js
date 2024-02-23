@@ -28,23 +28,22 @@ export const UserSignUp = () => {
       regDate: date.toLocaleString(),
     };
 
-    await axios
-      .post('/auth/createUser', payload, {
-        headers: {
-          'Content-Type': `application/json`,
-          // Accept: "application/json",
-          // Authorization: "Bearer " + token,
-          'Access-Control-Allow-Origin': `*`,
-          'Access-Control-Allow-Credentials': 'true',
-        },
-      })
-      .then((res) => {
-        console.log(res);
-        movToPrevPage();
-      })
-      .catch((e) => {
-        console.log(e);
-      });
+    const response = await axios.post('/auth/createUser', payload, {
+      headers: {
+        'Content-Type': `application/json`,
+        // Accept: "application/json",
+        // Authorization: "Bearer " + token,
+        'Access-Control-Allow-Origin': `*`,
+        'Access-Control-Allow-Credentials': 'true',
+      },
+    });
+
+    if (response.data.regist) {
+      alert('회원가입에 성공했습니다.');
+      navigate('/');
+    } else {
+      alert('회원가입에 실패하였습니다.');
+    }
   };
 
   const movToPrevPage = () => {
