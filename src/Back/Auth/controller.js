@@ -1,11 +1,11 @@
 const { User } = require('../models/userModel');
+const { createToken } = require('./createToken');
 const { registUser, getUser } = require('./func_auth');
 const bcrypt = require('bcrypt');
 
 //
 // get User Info
 //
-
 exports.getUser = async (ctx) => {
   const { id, password } = ctx.request.body;
 
@@ -16,8 +16,10 @@ exports.getUser = async (ctx) => {
 
     if (isMatch) {
       console.log('Success Login');
+      console.log(user);
       // ctx.status = 200;
-      ctx.body = { success: true, message: 'Login successful' };
+      const token = createToken(user.name);
+      ctx.body = { success: true, message: 'Login successful', token };
     } else {
       console.log('Failed Login');
       // ctx.status = 401; // Unauthorized
@@ -25,8 +27,7 @@ exports.getUser = async (ctx) => {
     }
   } catch (e) {
     console.log(e);
-    ctx.status = 500;
-    ctx.body = 'Internal Server Error';
+    ctx.body = { success: false, message: '회원정보가 올바르지 않습니다.' };
   }
 };
 
@@ -46,7 +47,7 @@ exports.searchUsers = async (ctx) => {
 };
 
 exports.createUser = async (ctx) => {
-  const { id, password, regDate } = ctx.request.body;
+  const { id, password, name, regDate } = ctx.request.body;
 
   const dbName = 'Auth';
   const collection = 'users';
@@ -57,6 +58,7 @@ exports.createUser = async (ctx) => {
   const user = {
     id,
     password: hash,
+    name,
     regDate,
   };
 

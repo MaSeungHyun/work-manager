@@ -9,6 +9,7 @@ export const UserSignUp = () => {
   const [regInfo, setRegInfo] = useState({
     regId: '',
     regPassword: '',
+    regName: '',
   });
 
   const onChangeHandler = (e) => {
@@ -19,12 +20,15 @@ export const UserSignUp = () => {
     });
   };
 
-  const onPostUser = async () => {
+  const onPostUser = async (e) => {
+    e.preventDefault();
+
     const date = new Date();
 
     const payload = {
       id: regInfo.regId,
       password: regInfo.regPassword,
+      name: regInfo.regName,
       regDate: date.toLocaleString(),
     };
 
@@ -53,40 +57,61 @@ export const UserSignUp = () => {
   return (
     <div className={styles.authForm}>
       <div className={styles.formBox}>
-        <div>
-          <input
-            className={styles.logInfo}
-            name="regId"
-            onChange={onChangeHandler}
-            value={regInfo.regId}
-            autoFocus
-            placeholder="ID"
-            autoComplete="off"
-          />
-        </div>
-        <div>
+        <form onSubmit={onPostUser}>
+          <div>
+            <input
+              className={styles.logInfo}
+              name="regId"
+              onChange={onChangeHandler}
+              value={regInfo.regId}
+              autoFocus
+              placeholder="ID"
+              autoComplete="off"
+            />
+          </div>
+          <div>
+            <input
+              className={styles.logInfo}
+              name="regPassword"
+              type="password"
+              onChange={onChangeHandler}
+              value={regInfo.regPassword}
+              placeholder="Password"
+              autoComplete="off"
+            />
+          </div>
+
+          {/* <div>
           <input
             className={styles.logInfo}
             name="regPassword"
-            type="password"
             onChange={onChangeHandler}
             value={regInfo.regPassword}
             placeholder="Password"
             autoComplete="off"
           />
-        </div>
-        <div>
+        </div> */}
           <div>
-            <button className={styles.logButton} onClick={onPostUser}>
-              create an account
-            </button>
+            <input
+              className={styles.logInfo}
+              name="regName"
+              onChange={onChangeHandler}
+              value={regInfo.regName}
+              placeholder="Name"
+              autoComplete="off"
+            />
           </div>
 
           <div>
-            <button className={styles.logButton} onClick={movToPrevPage}>
-              cancel
+            <button className={styles.logButton} type="submit">
+              create an account
             </button>
           </div>
+        </form>
+        <div>
+          <button className={styles.logButton} onClick={movToPrevPage}>
+            cancel
+          </button>
         </div>
       </div>
     </div>

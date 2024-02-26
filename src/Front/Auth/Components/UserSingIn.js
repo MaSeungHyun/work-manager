@@ -4,6 +4,8 @@ import styles from '../CSS/UserSign.module.css';
 import axios from 'axios';
 import { useRecoilState } from 'recoil';
 import { IsLoggedIn } from '../../../recoil/auth';
+import { getCookie, setCookie } from '../../Cookie/cookie_manager';
+
 export const UserSignIn = () => {
   const navigate = useNavigate();
 
@@ -24,58 +26,69 @@ export const UserSignIn = () => {
     navigate('/register');
   };
 
-  const executeLogin = async () => {
-    const payload = {
-      id: input.userId,
-      password: input.userPw,
-    };
-    const response = await axios.post('/auth/getUser', payload, {
-      headers: {
-        'Content-Type': `application/json`,
-        'Access-Control-Allow-Origin': `*`,
-        'Access-Control-Allow-Credentials': 'true',
-      },
-    });
+  const executeLogin = async (e) => {
+    e.preventDefault();
 
-    if (response?.data.success) {
-      console.log(response.data.message);
-      setIsLoggedIn(true);
-      navigate('/');
+    if (input.userId && input.userPw) {
+      const payload = {
+        id: input.userId,
+        password: input.userPw,
+      };
+      const response = await axios.post('/auth/getUser', payload, {
+        headers: {
+          'Content-Type': `application/json`,
+          'Access-Control-Allow-Origin': `*`,
+          'Access-Control-Allow-Credentials': 'true',
+          Authorization: `Bearer ${getCookie('wmToken')}`,
+        },
+      });
+
+      if (response?.data.success) {
+        console.log(response.data.message);
+        console.log(response);
+        setIsLoggedIn(true);
+        setCookie('wmToken', `${response.data.token}`);
+        navigate('/', { replace: true });
+      } else {
+        alert(response.data.message);
+      }
     } else {
-      console.log(response.data.message);
+      alert('회원 정보를 입력해주세요.');
     }
   };
 
   return (
     <div className={styles.authForm}>
       <div className={styles.formBox}>
-        <div>
-          <input
-            autoFocus
-            className={styles.logInfo}
-            name="userId"
-            value={input.userId}
-            placeholder="ID"
-            onChange={onChangeHandler}
-          />
-        </div>
+        <form onSubmit={executeLogin}>
+          <div>
+            <input
+              autoFocus
+              className={styles.logInfo}
+              name="userId"
+              value={input.userId}
+              placeholder="ID"
+              onChange={onChangeHandler}
+            />
+          </div>
 
-        <div>
-          <input
-            className={styles.logInfo}
-            name="userPw"
-            type="password"
-            value={input.userPw}
-            placeholder="Password"
-            onChange={onChangeHandler}
-          />
-        </div>
+          <div>
+            <input
+              className={styles.logInfo}
+              name="userPw"
+              type="password"
+              value={input.userPw}
+              placeholder="Password"
+              onChange={onChangeHandler}
+            />
+          </div>
 
-        <div>
-          <button className={styles.logButton} onClick={executeLogin}>
-            Login
-          </button>
-        </div>
+          <div>
+            <button className={styles.logButton} type="submit">
+              Login
+            </button>
+          </div>
+        </form>
 
         <div className={styles.logOpt}>
           <div className={styles.check_remember}>

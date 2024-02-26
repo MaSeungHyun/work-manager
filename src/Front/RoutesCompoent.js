@@ -4,7 +4,7 @@ import { useRecoilValue } from 'recoil';
 import { IsLoggedIn } from '../recoil/auth';
 import AuthForm from './Auth/AuthForm';
 import { UserSignUp } from './Auth/Components/UserSignUp';
-import MainView from './Main/Main';
+import MainView from './Main/MainView';
 
 export default function RouterComponent() {
   const isLoggedIn = useRecoilValue(IsLoggedIn);
