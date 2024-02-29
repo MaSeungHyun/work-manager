@@ -7,9 +7,9 @@ const app = new Koa();
 
 const bodyParser = require('koa-bodyparser');
 
-const mongo = require('./mongo');
+const mongo = require('../database/mongo');
 
-const auth = require('../Auth/manager');
+const auth = require('../Auth/auth_routes');
 
 const cors = require('@koa/cors');
 const Router = require('koa-router');

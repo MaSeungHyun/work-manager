@@ -1,15 +1,17 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from '../CSS/UserSign.module.css';
 import axios from 'axios';
 import { useRecoilState } from 'recoil';
-import { IsLoggedIn } from '../../../recoil/auth';
-import { getCookie, setCookie } from '../../Cookie/cookie_manager';
+import { IsLoggedIn, UserId, Username } from '../../../recoil/auth';
+import { clearCookie, getCookie, setCookie } from '../../Cookie/cookie_manager';
 
 export const UserSignIn = () => {
   const navigate = useNavigate();
 
   const [isLoggedIn, setIsLoggedIn] = useRecoilState(IsLoggedIn);
+  const [usernId, setUserId] = useRecoilState(UserId);
+  const [username, setUsername] = useRecoilState(Username);
   const [input, setInput] = useState({
     userId: '',
     userPw: '',
@@ -34,20 +36,33 @@ export const UserSignIn = () => {
         id: input.userId,
         password: input.userPw,
       };
-      const response = await axios.post('/auth/getUser', payload, {
+      const response = await axios.post('/auth/login', payload, {
         headers: {
           'Content-Type': `application/json`,
           'Access-Control-Allow-Origin': `*`,
           'Access-Control-Allow-Credentials': 'true',
-          Authorization: `Bearer ${getCookie('wmToken')}`,
+          // Authorization: `Bearer ${getCookie('accesss_token')}`,
         },
       });
 
+      console.log(response);
       if (response?.data.success) {
-        console.log(response.data.message);
-        console.log(response);
         setIsLoggedIn(true);
-        setCookie('wmToken', `${response.data.token}`);
+        setUserId(input.userId);
+        setUsername(response.data.name);
+        console.log(response);
+        console.log(response.headers);
+        console.log(response.data.access_token);
+
+        setCookie('access_token', `${response.data.access_token}`);
+
+        // axios.defaults.headers.common[
+        //   'Authorization'
+        // ] = `Bearer ${response.data.access_token}`;
+        // axios.defaults.headers.common['Authorization'] = `Bearer ${getCookie(
+        //   'access_token',
+        // )}`;
+
         navigate('/', { replace: true });
       } else {
         alert(response.data.message);
@@ -56,6 +71,11 @@ export const UserSignIn = () => {
       alert('회원 정보를 입력해주세요.');
     }
   };
+
+  useEffect(() => {
+    clearCookie();
+    setIsLoggedIn(false);
+  }, []);
 
   return (
     <div className={styles.authForm}>

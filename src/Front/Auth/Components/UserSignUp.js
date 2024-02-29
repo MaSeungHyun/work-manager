@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from '../CSS/UserSign.module.css';
+import { getCookie } from '../../Cookie/cookie_manager';
 
 export const UserSignUp = () => {
   const navigate = useNavigate();
@@ -36,9 +37,10 @@ export const UserSignUp = () => {
       headers: {
         'Content-Type': `application/json`,
         // Accept: "application/json",
-        // Authorization: "Bearer " + token,
+
         'Access-Control-Allow-Origin': `*`,
         'Access-Control-Allow-Credentials': 'true',
+        Authorization: `Bearer ${getCookie('access_token')}`,
       },
     });
 
